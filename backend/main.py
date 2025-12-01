@@ -29,6 +29,18 @@ class PlacementRequest(BaseModel):
 class PlacementResponse(BaseModel):
     placementLevel: int
 
+
+class ExerciseAttemptRequest(BaseModel):
+    userId: str
+    audioBase64: str
+
+
+class ExerciseAttemptResponse(BaseModel):
+    attemptId: str
+    score: float
+    accuracy: float
+    feedback: str
+
 app = FastAPI(title="Speech Practice API", version="0.1.0")
 
 app.add_middleware(
@@ -68,6 +80,22 @@ async def onboarding(payload: OnboardingRequest):
 async def placement(_: PlacementRequest):
     # Generate a random placement level between 1 and 4.
     return PlacementResponse(placementLevel=random.randint(1, 4))
+
+
+@app.post("/api/exercises/{exercise_id}/attempt", response_model=ExerciseAttemptResponse)
+async def submit_exercise_attempt(exercise_id: str, payload: ExerciseAttemptRequest):
+    if not payload.audioBase64:
+        raise HTTPException(status_code=400, detail="Audio is required")
+
+    score = round(random.uniform(60, 100), 1)
+    accuracy = round(random.uniform(0.65, 0.98), 2)
+
+    return ExerciseAttemptResponse(
+        attemptId=f"attempt-{exercise_id}-{random.randint(1000, 9999)}",
+        score=score,
+        accuracy=accuracy,
+        feedback="Thanks for submitting! Keep practicing this phrase.",
+    )
 
 
 @app.get("/")

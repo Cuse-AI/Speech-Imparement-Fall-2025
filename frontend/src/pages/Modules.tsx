@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Module } from '../types';
 
 function Modules() {
@@ -65,6 +66,13 @@ function Modules() {
                 <strong>{exercise.text}</strong>
                 <div className="level">Phonemes: {exercise.phonemes.join(', ')}</div>
                 <div className="level">Level: {exercise.level}</div>
+                <Link
+                  className="button"
+                  to={`/exercise/${exercise.id}`}
+                  style={{ marginTop: '0.5rem', display: 'inline-block' }}
+                >
+                  Practice this exercise
+                </Link>
               </li>
             ))}
           </ul>

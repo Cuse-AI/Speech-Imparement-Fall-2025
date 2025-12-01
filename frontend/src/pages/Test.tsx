@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useRecorder, { blobToBase64 } from '../hooks/useRecorder';
 
 const practiceWords = ['Bubble', 'Candle', 'River'];
 const practiceSentence = 'She sells seashells by the seashore.';
@@ -8,6 +9,7 @@ function Test() {
   const navigate = useNavigate();
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { isRecording, startRecording, stopRecording } = useRecorder();
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -16,7 +18,20 @@ function Test() {
     }
   }, [navigate]);
 
-  const simulateAttempt = async () => {
+  const beginRecording = async () => {
+    setStatus(null);
+    try {
+      await startRecording();
+    } catch (err) {
+      if (err instanceof Error) {
+        setStatus(err.message);
+      } else {
+        setStatus('Unable to start recording');
+      }
+    }
+  };
+
+  const submitPlacementAttempt = async () => {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       navigate('/onboarding');
@@ -27,6 +42,9 @@ function Test() {
     setStatus(null);
 
     try {
+      const audioBlob = await stopRecording();
+      const audioBase64 = await blobToBase64(audioBlob);
+
       const response = await fetch('/api/placement', {
         method: 'POST',
         headers: {
@@ -34,7 +52,7 @@ function Test() {
         },
         body: JSON.stringify({
           userId,
-          audioBase64: 'ZHVtbXktYXVkaW8=',
+          audioBase64,
         }),
       });
 
@@ -73,11 +91,16 @@ function Test() {
         <h2>Practice sentence</h2>
         <p style={{ fontWeight: 600 }}>{practiceSentence}</p>
 
-        <p className="level">Recording is mocked for now. Use the button below to simulate an attempt.</p>
+        <p className="level">Tap record, read the text aloud, then stop to submit your placement audio.</p>
 
-        <button className="button" onClick={simulateAttempt} disabled={loading}>
-          {loading ? 'Submitting…' : 'Simulate Attempt'}
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button className="button" onClick={beginRecording} disabled={isRecording || loading}>
+            {isRecording ? 'Recording…' : 'Start recording'}
+          </button>
+          <button className="button" onClick={submitPlacementAttempt} disabled={!isRecording || loading}>
+            {loading ? 'Submitting…' : 'Stop and submit'}
+          </button>
+        </div>
 
         {status && <p style={{ marginTop: '1rem' }}>{status}</p>}
       </div>
