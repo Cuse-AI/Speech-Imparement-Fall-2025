@@ -1,14 +1,16 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel, EmailStr
+
+ProficiencyLevel = Literal["beginner", "intermediate", "advanced"]
 
 
 class UserProfile(BaseModel):
     id: str
     name: str
     email: EmailStr
-    avatar_url: Optional[str] = None
+    avatarUrl: Optional[str] = None
     goals: Optional[List[str]] = None
 
 
@@ -17,14 +19,14 @@ class Exercise(BaseModel):
     moduleId: str
     text: str
     phonemes: List[str]
-    level: str
+    level: ProficiencyLevel
 
 
 class Module(BaseModel):
     id: str
     title: str
     description: str
-    level: str
+    level: ProficiencyLevel
     exercises: List[Exercise]
 
 
@@ -42,5 +44,5 @@ class Progress(BaseModel):
     userId: str
     moduleId: str
     completedExerciseIds: List[str]
-    currentLevel: str
+    currentLevel: ProficiencyLevel
     updatedAt: datetime
