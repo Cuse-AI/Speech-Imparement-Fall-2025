@@ -1,3 +1,4 @@
+import base64
 import random
 from pathlib import Path
 from typing import List
@@ -9,6 +10,7 @@ import json
 from pydantic import BaseModel
 
 from .models import Module
+from .services.azure_pronunciation import assess_pronunciation
 
 
 class OnboardingRequest(BaseModel):
@@ -21,13 +23,19 @@ class OnboardingResponse(BaseModel):
     userId: str
 
 
+class PronunciationAttempt(BaseModel):
+    text: str
+    audioBase64: str
+
+
 class PlacementRequest(BaseModel):
     userId: str
-    audioBase64: str
+    attempts: List[PronunciationAttempt]
 
 
 class PlacementResponse(BaseModel):
     placementLevel: int
+    averageScore: float
 
 
 class ExerciseAttemptRequest(BaseModel):
@@ -40,6 +48,19 @@ class ExerciseAttemptResponse(BaseModel):
     score: float
     accuracy: float
     feedback: str
+
+
+class ExerciseEvaluationRequest(BaseModel):
+    userId: str
+    targetText: str
+    audioBase64: str
+
+
+class ExerciseEvaluationResponse(BaseModel):
+    overallScore: float
+    phonemes: List[dict]
+    words: List[dict]
+
 
 app = FastAPI(title="Speech Practice API", version="0.1.0")
 
@@ -71,15 +92,38 @@ async def get_modules():
 
 @app.post("/api/onboarding", response_model=OnboardingResponse)
 async def onboarding(payload: OnboardingRequest):
-    # In a real implementation we would persist onboarding data. For now, return a fake user id.
     fake_user_id = f"user-{random.randint(1000, 9999)}"
     return OnboardingResponse(userId=fake_user_id)
 
 
 @app.post("/api/placement", response_model=PlacementResponse)
-async def placement(_: PlacementRequest):
-    # Generate a random placement level between 1 and 4.
-    return PlacementResponse(placementLevel=random.randint(1, 4))
+async def placement(payload: PlacementRequest):
+    if not payload.attempts:
+        raise HTTPException(status_code=400, detail="At least one attempt is required")
+
+    scores = []
+    for attempt in payload.attempts:
+        if not attempt.audioBase64:
+            raise HTTPException(status_code=400, detail="Audio is required for each attempt")
+
+        audio_bytes = base64.b64decode(attempt.audioBase64)
+        result = assess_pronunciation(attempt.text, audio_bytes)
+        if result.get("overallScore") is None:
+            raise HTTPException(status_code=502, detail="Invalid pronunciation response")
+        scores.append(result["overallScore"])
+
+    average_score = sum(scores) / len(scores)
+
+    if average_score >= 85:
+        placement_level = 4
+    elif average_score >= 70:
+        placement_level = 3
+    elif average_score >= 50:
+        placement_level = 2
+    else:
+        placement_level = 1
+
+    return PlacementResponse(placementLevel=placement_level, averageScore=average_score)
 
 
 @app.post("/api/exercises/{exercise_id}/attempt", response_model=ExerciseAttemptResponse)
@@ -96,6 +140,20 @@ async def submit_exercise_attempt(exercise_id: str, payload: ExerciseAttemptRequ
         accuracy=accuracy,
         feedback="Thanks for submitting! Keep practicing this phrase.",
     )
+
+
+@app.post("/api/exercise/evaluate", response_model=ExerciseEvaluationResponse)
+async def evaluate_exercise(payload: ExerciseEvaluationRequest):
+    if not payload.audioBase64:
+        raise HTTPException(status_code=400, detail="Audio is required")
+
+    audio_bytes = base64.b64decode(payload.audioBase64)
+    result = assess_pronunciation(payload.targetText, audio_bytes)
+
+    if result.get("overallScore") is None:
+        raise HTTPException(status_code=502, detail="Invalid pronunciation response")
+
+    return ExerciseEvaluationResponse(**result)
 
 
 @app.get("/")
