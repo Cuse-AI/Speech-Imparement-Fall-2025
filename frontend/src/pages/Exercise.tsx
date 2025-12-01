@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import useRecorder, { blobToBase64 } from '../hooks/useRecorder';
-import { Exercise, Module } from '../types';
+import { Attempt, Exercise, Module } from '../types';
 
 function ExercisePage() {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +12,19 @@ function ExercisePage() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [attemptsByExercise, setAttemptsByExercise] = useState<Record<string, Attempt[]>>({});
+
+  useEffect(() => {
+    const storedAttempts = localStorage.getItem('exerciseAttempts');
+    if (storedAttempts) {
+      try {
+        setAttemptsByExercise(JSON.parse(storedAttempts));
+      } catch (err) {
+        console.error('Failed to parse attempts from storage', err);
+        setAttemptsByExercise({});
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -41,6 +54,13 @@ function ExercisePage() {
   }, [id, modules]);
 
   const parentModule = useMemo(() => modules.find((module) => module.id === exercise?.moduleId), [exercise, modules]);
+
+  const exerciseAttempts = useMemo(() => {
+    if (!id) return [];
+    return attemptsByExercise[id] ?? [];
+  }, [attemptsByExercise, id]);
+
+  const latestAttempt = exerciseAttempts[exerciseAttempts.length - 1];
 
   const beginRecording = async () => {
     setStatus(null);
@@ -90,6 +110,33 @@ function ExercisePage() {
       }
 
       const data = await response.json();
+      const previousAttempts = attemptsByExercise[id] ?? [];
+      const isFirstAttempt = previousAttempts.length === 0;
+      const color = data.score >= 80 ? (isFirstAttempt ? 'green' : 'blue') : 'red';
+      const colorMap = exercise.phonemes.reduce<Record<string, string>>((map, phoneme) => {
+        map[phoneme] = color;
+        return map;
+      }, {});
+
+      const attemptRecord: Attempt = {
+        id: data.attemptId,
+        exerciseId: id,
+        userId,
+        score: data.score,
+        accuracy: data.accuracy,
+        feedback: data.feedback,
+        createdAt: new Date().toISOString(),
+        colorMap,
+      };
+
+      const updatedAttempts = {
+        ...attemptsByExercise,
+        [id]: [...previousAttempts, attemptRecord],
+      };
+
+      setAttemptsByExercise(updatedAttempts);
+      localStorage.setItem('exerciseAttempts', JSON.stringify(updatedAttempts));
+
       setStatus(
         `Attempt saved! Score ${data.score.toFixed(1)} / 100 • Accuracy ${Math.round(data.accuracy * 100)}%. ${
           data.feedback ?? ''
@@ -133,7 +180,6 @@ function ExercisePage() {
             {parentModule?.title}
           </p>
           <h1 style={{ margin: '0.25rem 0 0' }}>{exercise.text}</h1>
-          <p className="level">Phonemes: {exercise.phonemes.join(', ')}</p>
         </div>
         <Link to="/modules" className="button" style={{ whiteSpace: 'nowrap' }}>
           Back to modules
@@ -142,6 +188,16 @@ function ExercisePage() {
 
       <div className="card" style={{ marginTop: '1rem' }}>
         <p>Tap record, speak the phrase clearly, then submit your attempt for feedback.</p>
+
+        <div className="chip-row" aria-label="Phoneme performance">
+          {exercise.phonemes.map((phoneme) => (
+            <span key={phoneme} className={`chip ${latestAttempt?.colorMap?.[phoneme] ?? 'neutral'}`}>
+              {phoneme}
+            </span>
+          ))}
+        </div>
+
+        {latestAttempt?.feedback && <p className="level">{latestAttempt.feedback}</p>}
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
           <button className="button" onClick={beginRecording} disabled={isRecording || submitting}>

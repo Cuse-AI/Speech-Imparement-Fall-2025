@@ -32,6 +32,7 @@ export interface Attempt {
   accuracy: number;
   feedback?: string;
   createdAt: string;
+  colorMap?: Record<string, string>;
 }
 
 export interface Progress {
