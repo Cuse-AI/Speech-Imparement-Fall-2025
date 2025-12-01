@@ -1,3 +1,4 @@
+import random
 from pathlib import Path
 from typing import List
 
@@ -5,7 +6,28 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import json
 
+from pydantic import BaseModel
+
 from .models import Module
+
+
+class OnboardingRequest(BaseModel):
+    age: int
+    readingLevel: str
+    difficultyArea: str
+
+
+class OnboardingResponse(BaseModel):
+    userId: str
+
+
+class PlacementRequest(BaseModel):
+    userId: str
+    audioBase64: str
+
+
+class PlacementResponse(BaseModel):
+    placementLevel: int
 
 app = FastAPI(title="Speech Practice API", version="0.1.0")
 
@@ -33,6 +55,19 @@ def load_modules() -> List[Module]:
 @app.get("/api/modules", response_model=List[Module])
 async def get_modules():
     return load_modules()
+
+
+@app.post("/api/onboarding", response_model=OnboardingResponse)
+async def onboarding(payload: OnboardingRequest):
+    # In a real implementation we would persist onboarding data. For now, return a fake user id.
+    fake_user_id = f"user-{random.randint(1000, 9999)}"
+    return OnboardingResponse(userId=fake_user_id)
+
+
+@app.post("/api/placement", response_model=PlacementResponse)
+async def placement(_: PlacementRequest):
+    # Generate a random placement level between 1 and 4.
+    return PlacementResponse(placementLevel=random.randint(1, 4))
 
 
 @app.get("/")
