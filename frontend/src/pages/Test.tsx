@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useRecorder, { blobToBase64 } from '../hooks/useRecorder';
 
 const practiceWords = ['Bubble', 'Candle', 'River'];
-const practiceSentence = 'She sells seashells by the seashore.';
+const practiceSentence = 'I see a big red ball.';
 
 function Test() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ function Test() {
 
       const data = await response.json();
       localStorage.setItem('placementLevel', String(data.placementLevel));
-      setStatus(`Placement complete! Level ${data.placementLevel} assigned.`);
+      setStatus(`✅ Language Confidence API: Placement Level ${data.placementLevel} assigned (${(data.averageScore || 0).toFixed(1)}/100).`);
       navigate('/modules');
     } catch (err) {
       if (err instanceof Error) {

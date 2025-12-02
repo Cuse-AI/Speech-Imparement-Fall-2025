@@ -54,6 +54,15 @@ function Onboarding() {
       <h1>Welcome to Speech Practice</h1>
       <p>Tell us a bit about you so we can tailor your practice plan.</p>
 
+      <section style={{ marginBottom: '1rem' }}>
+        <strong>Quick reference:</strong> Short practice tips and phrases are available in the STUTTER PDF.
+        <div style={{ marginTop: '0.5rem' }}>
+          <a className="button" href="/assets/STUTTER.pdf" target="_blank" rel="noreferrer">
+            Open practice PDF
+          </a>
+        </div>
+      </section>
+
       <form className="card" onSubmit={handleSubmit}>
         <label style={{ display: 'block', marginBottom: '1rem' }}>
           <span style={{ display: 'block', fontWeight: 600 }}>Age</span>

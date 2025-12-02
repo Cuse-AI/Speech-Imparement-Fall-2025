@@ -1,0 +1,33 @@
+# Render service manifest — stores service definitions for Render.com
+# This file contains placeholders for secrets and should NOT contain real API keys.
+# After adding this to your repo, go to Render dashboard, create a new service
+# and select "Connect a repository". Render will use this manifest to create
+# two services: the `backend` web service and the `frontend` static site.
+
+services:
+  - type: web
+    name: speech-impairment-backend
+    env: python
+    plan: free
+    # Build and start commands
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker backend.main:app --bind 0.0.0.0:$PORT
+    disk: 512
+    # IMPORTANT: Do not commit secrets here. Set these in the Render dashboard.
+    envVars:
+      - key: PRONUNCIATION_SERVICE
+        value: language_confidence
+      - key: LANGUAGE_CONFIDENCE_ENDPOINT
+        value: https://portal.languageconfidence.ai
+      # LANGUAGE_CONFIDENCE_KEY and LANGUAGE_CONFIDENCE_APP_ID should be added via Render UI as secure variables
+
+  - type: static
+    name: speech-impairment-frontend
+    plan: free
+    # Point to the frontend folder
+    staticPublishPath: frontend/dist
+    buildCommand: cd frontend && npm ci && npm run build
+    # You can set VITE_API_BASE_URL in the service environment to point at your backend URL
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://your-backend.onrender.com

@@ -138,7 +138,7 @@ function ExercisePage() {
       localStorage.setItem('exerciseAttempts', JSON.stringify(updatedAttempts));
 
       setStatus(
-        `Attempt saved! Score ${data.score.toFixed(1)} / 100 • Accuracy ${Math.round(data.accuracy * 100)}%. ${
+        `✅ Language Confidence API: Score ${data.score.toFixed(1)} / 100 • Accuracy ${Math.round(data.accuracy * 100)}%. ${
           data.feedback ?? ''
         }`
       );
