@@ -1,145 +1,74 @@
 [
   {
-    "id": "module-1",
-    "title": "Basic Sounds",
-    "description": "Foundational phoneme practice with slow pacing.",
+    "id": "module-beginner",
+    "title": "Beginner — Foundational Sounds",
+    "description": "Short syllables and simple words to build clarity.",
     "level": "beginner",
     "exercises": [
       {
-        "id": "exercise-1-1",
-        "moduleId": "module-1",
-        "text": "pa ba ma",
-        "phonemes": ["/p/", "/b/", "/m/"],
+        "id": "exercise-beg-1",
+        "moduleId": "module-beginner",
+        "text": "pa ba ma (repeat slowly)",
+        "phonemes": ["/p/","/b/","/m/"],
         "level": "beginner"
       },
       {
-        "id": "exercise-1-2",
-        "moduleId": "module-1",
-        "text": "ta da na",
-        "phonemes": ["/t/", "/d/", "/n/"],
-        "level": "beginner"
-      },
-      {
-        "id": "exercise-1-3",
-        "moduleId": "module-1",
-        "text": "ka ga nga",
-        "phonemes": ["/k/", "/g/", "/ŋ/"],
+        "id": "exercise-beg-2",
+        "moduleId": "module-beginner",
+        "text": "Hello. Please. Thank you. (short phrases)",
+        "phonemes": ["/h/","/l/","/θ/","/k/","/j/"],
         "level": "beginner"
       }
     ]
   },
   {
-    "id": "module-2",
-    "title": "Everyday Words",
-    "description": "Common words to build clarity and confidence.",
-    "level": "beginner",
-    "exercises": [
-      {
-        "id": "exercise-2-1",
-        "moduleId": "module-2",
-        "text": "Hello, please, thank you",
-        "phonemes": ["/h/", "/l/", "/θ/", "/k/", "/j/"],
-        "level": "beginner"
-      },
-      {
-        "id": "exercise-2-2",
-        "moduleId": "module-2",
-        "text": "Good morning, good night",
-        "phonemes": ["/g/", "/d/", "/m/", "/n/"],
-        "level": "beginner"
-      },
-      {
-        "id": "exercise-2-3",
-        "moduleId": "module-2",
-        "text": "Water, doctor, station",
-        "phonemes": ["/w/", "/t/", "/r/", "/ʃ/"],
-        "level": "beginner"
-      }
-    ]
-  },
-  {
-    "id": "module-3",
-    "title": "Short Sentences",
-    "description": "Smooth transitions between words in short sentences.",
+    "id": "module-stutter",
+    "title": "Stuttering Practice",
+    "description": "Short strategies and practice phrases; focus on relaxed breathing and gentle onset.",
     "level": "intermediate",
     "exercises": [
       {
-        "id": "exercise-3-1",
-        "moduleId": "module-3",
-        "text": "I need a glass of water",
-        "phonemes": ["/aɪ/", "/n/", "/d/", "/g/", "/l/", "/æ/", "/s/", "/əv/", "/w/", "/ɔ/", "/t/"],
+        "id": "exercise-stutter-1",
+        "moduleId": "module-stutter",
+        "text": "Take a breath — say: 'slow and steady' (pause between words)",
+        "phonemes": ["/s/","/l/","/o/"],
         "level": "intermediate"
       },
       {
-        "id": "exercise-3-2",
-        "moduleId": "module-3",
-        "text": "Please call my friend",
-        "phonemes": ["/p/", "/l/", "/i/", "/z/", "/k/", "/ɔ/", "/m/", "/f/", "/r/", "/ɛ/", "/n/", "/d/"],
+        "id": "exercise-stutter-2",
+        "moduleId": "module-stutter",
+        "text": "Say: 'I can say this' — keep airflow steady",
+        "phonemes": ["/aɪ/","/k/","/s/"],
         "level": "intermediate"
       },
       {
-        "id": "exercise-3-3",
-        "moduleId": "module-3",
-        "text": "The bus is arriving",
-        "phonemes": ["/ð/", "/ə/", "/b/", "/ʌ/", "/s/", "/ɪ/", "/z/", "/ə/", "/r/", "/aɪ/", "/v/", "/ɪ/", "/ŋ/"],
+        "id": "exercise-stutter-3",
+        "moduleId": "module-stutter",
+        "text": "Stretch the first sound gently: 'ssssun' — control airflow",
+        "phonemes": ["/s/","/ʌ/","/n/"],
+        "level": "intermediate"
+      },
+      {
+        "id": "exercise-stutter-4",
+        "moduleId": "module-stutter",
+        "text": "Pause between each word: 'I / can / do / this'",
+        "phonemes": ["/aɪ/","/k/","/d/","/ð/"],
         "level": "intermediate"
       }
-    ]
+    ],
+    "source": "/assets/STUTTER.pdf"
   },
   {
-    "id": "module-4",
-    "title": "Rhythm and Pauses",
-    "description": "Practice pacing, stress, and intentional pausing.",
-    "level": "intermediate",
-    "exercises": [
-      {
-        "id": "exercise-4-1",
-        "moduleId": "module-4",
-        "text": "Breathe before the big words",
-        "phonemes": ["/b/", "/r/", "/i/", "/ð/", "/b/", "/ɪ/", "/f/", "/ɔ/", "/r/", "/ð/", "/ə/", "/b/", "/ɪ/", "/g/", "/w/", "/ɝ/", "/d/", "/z/"],
-        "level": "intermediate"
-      },
-      {
-        "id": "exercise-4-2",
-        "moduleId": "module-4",
-        "text": "Pause after each thought",
-        "phonemes": ["/p/", "/ɔ/", "/z/", "/æ/", "/f/", "/t/", "/ɝ/", "/i/", "/t/", "/θ/", "/ɔ/", "/t/"],
-        "level": "intermediate"
-      },
-      {
-        "id": "exercise-4-3",
-        "moduleId": "module-4",
-        "text": "Stress the key idea",
-        "phonemes": ["/s/", "/t/", "/r/", "/ɛ/", "/s/", "/ð/", "/ə/", "/k/", "/i/", "/aɪ/", "/d/", "/i/", "/ə/"],
-        "level": "intermediate"
-      }
-    ]
-  },
-  {
-    "id": "module-5",
-    "title": "Conversational Flow",
-    "description": "Full-sentence practice with natural rhythm and clarity.",
+    "id": "module-advanced",
+    "title": "Advanced — Conversational Flow",
+    "description": "Longer phrases and full-sentence practice for natural rhythm.",
     "level": "advanced",
     "exercises": [
       {
-        "id": "exercise-5-1",
-        "moduleId": "module-5",
+        "id": "exercise-adv-1",
+        "moduleId": "module-advanced",
         "text": "Could you tell me where the station is?",
-        "phonemes": ["/k/", "/ʊ/", "/d/", "/j/", "/u/", "/t/", "/ɛ/", "/l/", "/m/", "/i/", "/w/", "/ɛ/", "/r/", "/ð/", "/ə/", "/s/", "/t/", "/eɪ/", "/ʃ/", "/ə/", "/n/", "/ɪ/", "/z/"],
-        "level": "advanced"
-      },
-      {
-        "id": "exercise-5-2",
-        "moduleId": "module-5",
-        "text": "I appreciate your patience",
-        "phonemes": ["/aɪ/", "/ə/", "/p/", "/r/", "/i/", "/ʃ/", "/i/", "/eɪ/", "/t/", "/j/", "/ɔ/", "/r/", "/p/", "/eɪ/", "/ʃ/", "/ə/", "/n/", "/s/"],
-        "level": "advanced"
-      },
-      {
-        "id": "exercise-5-3",
-        "moduleId": "module-5",
-        "text": "Let's discuss the plan for tomorrow",
-        "phonemes": ["/l/", "/ɛ/", "/t/", "/s/", "/d/", "/ɪ/", "/s/", "/k/", "/ʌ/", "/s/", "/ð/", "/ə/", "/p/", "/l/", "/æ/", "/n/", "/f/", "/ɔ/", "/r/", "/t/", "/ə/", "/m/", "/ɑ/", "/r/", "/o/"],
+        "phonemes": ["/k/","/ʊ/","/d/","/j/","/u/","/t/"],
         "level": "advanced"
       }
     ]

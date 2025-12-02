@@ -6,6 +6,7 @@ import Modules from './pages/Modules';
 import Onboarding from './pages/Onboarding';
 import ExercisePage from './pages/Exercise';
 import Test from './pages/Test';
+import Resources from './pages/Resources';
 import './styles.css';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
         <Route path="/test" element={<Test />} />
         <Route path="/modules" element={<Modules />} />
         <Route path="/exercise/:id" element={<ExercisePage />} />
+        <Route path="/resources" element={<Resources />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

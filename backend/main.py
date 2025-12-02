@@ -1,5 +1,6 @@
 import base64
 import random
+import os
 from pathlib import Path
 from typing import List
 
@@ -10,7 +11,7 @@ import json
 from pydantic import BaseModel
 
 from .models import Module
-from .services.azure_pronunciation import assess_pronunciation
+from .services.azure_pronunciation import get_assessor
 from .services.gpt_feedback import generate_feedback
 
 
@@ -74,6 +75,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Log which pronunciation service is configured at startup
+print(f"Configured pronunciation service: {os.getenv('PRONUNCIATION_SERVICE', 'azure')}")
+
 MODULES_PATH = Path(__file__).resolve().parents[1] / "frontend" / "src" / "data" / "modules.json"
 
 
@@ -104,12 +108,14 @@ async def placement(payload: PlacementRequest):
         raise HTTPException(status_code=400, detail="At least one attempt is required")
 
     scores = []
+    assessor = get_assessor()  # Get the configured pronunciation assessment service
+    
     for attempt in payload.attempts:
         if not attempt.audioBase64:
             raise HTTPException(status_code=400, detail="Audio is required for each attempt")
 
         audio_bytes = base64.b64decode(attempt.audioBase64)
-        result = assess_pronunciation(attempt.text, audio_bytes)
+        result = assessor.assess(attempt.text, audio_bytes)
         if result.get("overallScore") is None:
             raise HTTPException(status_code=502, detail="Invalid pronunciation response")
         scores.append(result["overallScore"])
@@ -150,7 +156,8 @@ async def evaluate_exercise(payload: ExerciseEvaluationRequest):
         raise HTTPException(status_code=400, detail="Audio is required")
 
     audio_bytes = base64.b64decode(payload.audioBase64)
-    result = assess_pronunciation(payload.targetText, audio_bytes)
+    assessor = get_assessor()  # Get the configured pronunciation assessment service
+    result = assessor.assess(payload.targetText, audio_bytes)
     feedback = generate_feedback(payload.targetText, result.get("phonemes") or [])
 
     if result.get("overallScore") is None:
