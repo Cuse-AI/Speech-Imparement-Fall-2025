@@ -2,7 +2,18 @@
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
   color: #0f172a;
-  background-color: #f8fafc;
+  background:
+    radial-gradient(1200px 600px at 10% 0%, #ffe8cc 10%, rgba(255,255,255,0) 60%),
+    radial-gradient(1200px 600px at 90% 100%, #dbeafe 10%, rgba(255,255,255,0) 60%),
+    #f8fafc;
+}
+
+.theme-fun {
+  color: #111827;
+  background:
+    radial-gradient(1200px 600px at 0% 100%, #ede9fe 10%, rgba(255,255,255,0) 60%),
+    radial-gradient(1200px 600px at 100% 0%, #cffafe 10%, rgba(255,255,255,0) 60%),
+    #eef2ff;
 }
 
 body {
@@ -10,27 +21,39 @@ body {
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
 }
 
 .button {
-  display: inline-block;
+  display: inline-inline;
   padding: 0.75rem 1.25rem;
-  background: #2563eb;
-  color: white;
-  border-radius: 0.5rem;
+  background: linear-gradient(180deg, #34d399 0%, #22c55e 100%);
+  color: #052e1b;
+  border-radius: 999px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(34, 197, 94, 0.5);
+  filter: brightness(1.05);
+}
+.button:active {
+  transform: translateY(0);
 }
 
 .card {
-  background: white;
-  border-radius: 0.75rem;
-  padding: 1rem;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  background: #ffffffcc;
+  backdrop-filter: saturate(120%) blur(6px);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
   margin-bottom: 1rem;
+  border: 1px solid rgba(2, 6, 23, 0.06);
 }
 
 .exercises {
@@ -41,8 +64,8 @@ body {
 .badge {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  background: #e0e7ff;
-  color: #1e3a8a;
+  background: #fde68a; /* soft amber */
+  color: #7c2d12; /* brown */
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -68,21 +91,25 @@ body {
   border-radius: 999px;
   font-weight: 600;
   font-size: 0.9rem;
-  background: #e2e8f0;
-  color: #0f172a;
+  background: #eef2ff;
+  color: #1e293b;
+  border: 1px solid rgba(99, 102, 241, 0.25);
 }
 
 .chip.green {
-  background: #dcfce7;
-  color: #166534;
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .chip.blue {
-  background: #e0f2fe;
-  color: #075985;
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .chip.red {
-  background: #fee2e2;
-  color: #991b1b;
+  background: #ffe4e6;
+  color: #9f1239;
+  border: 1px solid rgba(244, 63, 94, 0.3);
 }

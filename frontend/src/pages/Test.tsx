@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useRecorder, { blobToBase64 } from '../hooks/useRecorder';
 
 const practiceWords = ['Bubble', 'Candle', 'River'];
-const practiceSentence = 'She sells seashells by the seashore.';
+const practiceSentence = 'I see a big red ball.';
 
 function Test() {
   const navigate = useNavigate();

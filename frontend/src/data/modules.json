@@ -1,21 +1,21 @@
 [
   {
     "id": "module-beginner",
-    "title": "Beginner — Foundational Sounds",
-    "description": "Short syllables and simple words to build clarity.",
+    "title": "Beginner — Sound Basics",
+    "description": "Short sounds and easy words. Nice and slow!",
     "level": "beginner",
     "exercises": [
       {
         "id": "exercise-beg-1",
         "moduleId": "module-beginner",
-        "text": "pa ba ma (repeat slowly)",
+        "text": "pa ba ma (say each one clearly)",
         "phonemes": ["/p/","/b/","/m/"],
         "level": "beginner"
       },
       {
         "id": "exercise-beg-2",
         "moduleId": "module-beginner",
-        "text": "Hello. Please. Thank you. (short phrases)",
+        "text": "Hello. Please. Thank you. (friendly short phrases)",
         "phonemes": ["/h/","/l/","/θ/","/k/","/j/"],
         "level": "beginner"
       }
@@ -23,40 +23,40 @@
   },
   {
     "id": "module-stutter",
-    "title": "Stuttering Practice",
-    "description": "Short strategies and practice phrases; focus on relaxed breathing and gentle onset.",
+    "title": "Smooth Speech",
+    "description": "Breathe, pause, and speak gently. You're doing great!",
     "level": "intermediate",
     "exercises": [
       {
         "id": "exercise-stutter-1",
         "moduleId": "module-stutter",
-        "text": "Take a breath — say: 'slow and steady' (pause between words)",
+        "text": "Take a breath — say: 'slow and steady' (small pauses)",
         "phonemes": ["/s/","/l/","/o/"],
         "level": "intermediate"
       },
       {
         "id": "exercise-stutter-2",
         "moduleId": "module-stutter",
-        "text": "Say: 'I can say this' — keep airflow steady",
+        "text": "Say: 'I can say this' — smooth steady air",
         "phonemes": ["/aɪ/","/k/","/s/"],
         "level": "intermediate"
       },
       {
         "id": "exercise-stutter-3",
         "moduleId": "module-stutter",
-        "text": "Stretch the first sound gently: 'ssssun' — control airflow",
+        "text": "Stretch the first sound gently: 'ssssun' — soft start",
         "phonemes": ["/s/","/ʌ/","/n/"],
         "level": "intermediate"
       },
       {
         "id": "exercise-stutter-4",
         "moduleId": "module-stutter",
-        "text": "Pause between each word: 'I / can / do / this'",
+        "text": "Pause between each word: 'I / can / do / this' (one beat)",
         "phonemes": ["/aɪ/","/k/","/d/","/ð/"],
         "level": "intermediate"
       }
     ],
-    "source": "/assets/STUTTER.pdf"
+    "source": ""
   },
   {
     "id": "module-advanced",
