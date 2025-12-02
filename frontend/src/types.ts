@@ -31,6 +31,7 @@ export interface Attempt {
   score: number;
   accuracy: number;
   feedback?: string;
+  ttsBase64?: string;
   createdAt: string;
   colorMap?: Record<string, string>;
 }

@@ -62,6 +62,21 @@ function ExercisePage() {
 
   const latestAttempt = exerciseAttempts[exerciseAttempts.length - 1];
 
+  const playSynthesizedAudio = async () => {
+    if (!latestAttempt?.ttsBase64) return;
+
+    try {
+      const audio = new Audio(`data:audio/mp3;base64,${latestAttempt.ttsBase64}`);
+      await audio.play();
+    } catch (err) {
+      if (err instanceof Error) {
+        setStatus(err.message);
+      } else {
+        setStatus('Unable to play pronunciation audio');
+      }
+    }
+  };
+
   const beginRecording = async () => {
     setStatus(null);
     try {
@@ -94,13 +109,14 @@ function ExercisePage() {
       const audioBlob = await stopRecording();
       const audioBase64 = await blobToBase64(audioBlob);
 
-      const response = await fetch(`/api/exercises/${id}/attempt`, {
+      const response = await fetch(`/api/exercise/evaluate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
+          targetText: exercise.text,
           audioBase64,
         }),
       });
@@ -111,20 +127,29 @@ function ExercisePage() {
 
       const data = await response.json();
       const previousAttempts = attemptsByExercise[id] ?? [];
-      const isFirstAttempt = previousAttempts.length === 0;
-      const color = data.score >= 80 ? (isFirstAttempt ? 'green' : 'blue') : 'red';
       const colorMap = exercise.phonemes.reduce<Record<string, string>>((map, phoneme) => {
-        map[phoneme] = color;
+        const match = (data.phonemes ?? []).find(
+          (item: { ph?: string }) => item?.ph?.toLowerCase() === phoneme.toLowerCase()
+        );
+        const score = match?.score ?? data.overallScore ?? 0;
+        if (score >= 80) {
+          map[phoneme] = 'green';
+        } else if (score >= 60) {
+          map[phoneme] = 'blue';
+        } else {
+          map[phoneme] = 'red';
+        }
         return map;
       }, {});
 
       const attemptRecord: Attempt = {
-        id: data.attemptId,
+        id: `attempt-${Date.now()}`,
         exerciseId: id,
         userId,
-        score: data.score,
-        accuracy: data.accuracy,
+        score: data.overallScore,
+        accuracy: (data.overallScore ?? 0) / 100,
         feedback: data.feedback,
+        ttsBase64: data.ttsBase64,
         createdAt: new Date().toISOString(),
         colorMap,
       };
@@ -137,11 +162,7 @@ function ExercisePage() {
       setAttemptsByExercise(updatedAttempts);
       localStorage.setItem('exerciseAttempts', JSON.stringify(updatedAttempts));
 
-      setStatus(
-        `Attempt saved! Score ${data.score.toFixed(1)} / 100 • Accuracy ${Math.round(data.accuracy * 100)}%. ${
-          data.feedback ?? ''
-        }`
-      );
+      setStatus(`Score ${data.overallScore.toFixed(1)} / 100. ${data.feedback ?? ''}`);
     } catch (err) {
       if (err instanceof Error) {
         setStatus(err.message);
@@ -205,6 +226,14 @@ function ExercisePage() {
           </button>
           <button className="button" onClick={submitAttempt} disabled={!isRecording || submitting}>
             {submitting ? 'Submitting…' : 'Stop and submit'}
+          </button>
+          <button
+            className="button"
+            onClick={playSynthesizedAudio}
+            disabled={!latestAttempt?.ttsBase64 || submitting}
+            style={{ backgroundColor: '#22c55e', color: '#0f172a' }}
+          >
+            Listen
           </button>
         </div>
 
