@@ -11,6 +11,7 @@ from pydantic import BaseModel
 
 from .models import Module
 from .services.azure_pronunciation import assess_pronunciation
+from .services.azure_tts import synthesize_pronunciation
 from .services.gpt_feedback import generate_feedback
 
 
@@ -62,6 +63,7 @@ class ExerciseEvaluationResponse(BaseModel):
     phonemes: List[dict]
     words: List[dict]
     feedback: str
+    ttsBase64: str
 
 
 app = FastAPI(title="Speech Practice API", version="0.1.0")
@@ -152,11 +154,13 @@ async def evaluate_exercise(payload: ExerciseEvaluationRequest):
     audio_bytes = base64.b64decode(payload.audioBase64)
     result = assess_pronunciation(payload.targetText, audio_bytes)
     feedback = generate_feedback(payload.targetText, result.get("phonemes") or [])
+    tts_audio = synthesize_pronunciation(payload.targetText)
+    tts_base64 = base64.b64encode(tts_audio).decode("utf-8")
 
     if result.get("overallScore") is None:
         raise HTTPException(status_code=502, detail="Invalid pronunciation response")
 
-    return ExerciseEvaluationResponse(**result, feedback=feedback)
+    return ExerciseEvaluationResponse(**result, feedback=feedback, ttsBase64=tts_base64)
 
 
 @app.get("/")
